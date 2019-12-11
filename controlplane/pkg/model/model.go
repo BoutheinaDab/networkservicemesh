@@ -117,7 +117,8 @@ func NewModel() Model {
 		clientConnectionDomain: newClientConnectionDomain(),
 		endpointDomain:         newEndpointDomain(),
 		forwarderDomain:        newForwarderDomain(),
-		selector:               selector.NewMatchSelector(),
+		//selector:               selector.NewMatchSelector(),
+		selector:               selector.NewMatchMaglevSelector(),
 		listeners:              make(map[Listener]func()),
 	}
 }

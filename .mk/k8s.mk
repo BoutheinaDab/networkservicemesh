@@ -34,9 +34,11 @@ include .mk/aws.mk
 include .mk/azure.mk
 
 # .kind.mk enables the kind.sigs.k8s.io docker based K8s install:
-# export CLUSTER_RULES_PREFIX=kind
+ export CLUSTER_RULES_PREFIX=kind
 # before running make
 include .mk/kind.mk
+
+ export NSC_PER_NS=2
 
 # .null.mk allows you to skip the vagrant machinery with:
 # export CLUSTER_RULES_PREFIX=null
@@ -150,7 +152,8 @@ k8s-forward:
 .PHONY: k8s-check
 k8s-check:
 	@NSM_NAMESPACE=${NSM_NAMESPACE} ./scripts/nsc_ping_all.sh
-	@NSM_NAMESPACE=${NSM_NAMESPACE} ./scripts/verify_vpn_gateway.sh
+	@NSM_NAMESPACE=${NSM_NAMESPACE} ./scripts/verify_vpn_gateway.sh 2 2 
+	@NSM_NAMESPACE=${NSM_NAMESPACE} ./scripts/pod_iperf_all.sh 2 2 "Udp"
 
 .PHONY: k8s-logs-snapshot
 k8s-logs-snapshot:

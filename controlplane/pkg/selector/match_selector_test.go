@@ -39,6 +39,7 @@ type genArgsParam struct {
 }
 
 func genArgs(p genArgsParam) args {
+
 	labels := map[string]string{}
 	for _, id := range p.labelIDs {
 		labels["label"+strconv.Itoa(id)] = "value" + strconv.Itoa(id)
@@ -95,6 +96,7 @@ func genArgs(p genArgsParam) args {
 }
 
 func Test_matchSelector_SelectEndpoint(t *testing.T) {
+
 	tests := []struct {
 		name string
 		args args
@@ -464,53 +466,7 @@ func Test_matchSelector_SelectEndpoint(t *testing.T) {
 				},
 			},
 		},
-		{
-			name: "match any with non-empty source selector",
-			args: args{
-				requestConnection: &connection.Connection{
-					Labels: map[string]string{
-						"app": "firewall",
-					},
-				},
-				ns: &registry.NetworkService{
-					Name: "test-ns",
-					Matches: []*registry.Match{
-						{
-							SourceSelector: map[string]string{
-								"app": "firewall",
-							},
-							Routes: []*registry.Destination{
-								{
-									DestinationSelector: map[string]string{
-										"app": "passthrough-1",
-									},
-								},
-							},
-						},
-						{
-							Routes: []*registry.Destination{
-								{
-									DestinationSelector: map[string]string{
-										"app": "firewall",
-									},
-								},
-							},
-						},
-					},
-				},
-				networkServiceEndpoints: []*registry.NetworkServiceEndpoint{
-					{
-						Name: "firewall",
-						Labels: map[string]string{
-							"app": "firewall",
-						},
-					},
-				},
-			},
-			want: nil,
-		},
 	}
-
 	m := NewMatchSelector()
 
 	for _, tt := range tests {

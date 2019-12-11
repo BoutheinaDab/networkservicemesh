@@ -6,7 +6,7 @@ spec:
     matchLabels:
       networkservicemesh.io/app: "passthrough"
       networkservicemesh.io/impl: "secure-intranet-connectivity"
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -51,7 +51,7 @@ spec:
     matchLabels:
       networkservicemesh.io/app: "passthrough"
       networkservicemesh.io/impl: "secure-intranet-connectivity"
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -90,7 +90,7 @@ spec:
     matchLabels:
       networkservicemesh.io/app: "passthrough"
       networkservicemesh.io/impl: "secure-intranet-connectivity"
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:

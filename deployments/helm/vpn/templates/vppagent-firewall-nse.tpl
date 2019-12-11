@@ -6,12 +6,14 @@ spec:
     matchLabels:
       networkservicemesh.io/app: "firewall"
       networkservicemesh.io/impl: "secure-intranet-connectivity"
-  replicas: 1
+      app: iperf-firewall-server
+  replicas: 2
   template:
     metadata:
       labels:
         networkservicemesh.io/app: "firewall"
         networkservicemesh.io/impl: "secure-intranet-connectivity"
+        app: iperf-firewall-server
     spec:
       serviceAccount: nse-acc
       containers:
@@ -44,6 +46,18 @@ spec:
             - mountPath: /etc/vppagent-firewall/config.yaml
               subPath: config.yaml
               name: vppagent-firewall-config-volume
+        
+        - name: iperf-firewall-server
+          image: jmarhee/iperf:latest
+          command: ['iperf', '-s', '-u', '-i', '5']
+          ports:
+          - containerPort: 5001
+        #- name: iperf-firewall-client
+          #image: jmarhee/iperf:latest
+          #command: ["iperf", "-c", "iperf-vpn-server", "-P", "10"]
+          #command: ["iperf", "-c", "iperf-vpn-server", "-u", "-b", "100m"]
+          #command: ["iperf", "-c", "iperf-vpn-server", "-u"]
+
       volumes:
         - name: vppagent-firewall-config-volume
           configMap:
@@ -51,6 +65,22 @@ spec:
 metadata:
   name: vppagent-firewall-nse
   namespace: {{ .Release.Namespace }}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: iperf-firewall-server
+  namespace: nsm-system
+spec:
+  selector:
+    app: iperf-firewall-server
+  ports:
+  - protocol: UDP
+    port: 5001
+    targetPort: 5001
+
+
 ---
 apiVersion: v1
 kind: ConfigMap
