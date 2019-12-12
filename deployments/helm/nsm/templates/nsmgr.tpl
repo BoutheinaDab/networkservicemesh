@@ -24,6 +24,12 @@ spec:
 {{- else }}
               value: "false"
 {{- end }}
+            - name: SELECTOR
+{{- if .Values.selector }}
+              value: "RoundRobin"
+{{- else }}
+              value: "Maglev"
+{{- end }}
 {{- if .Values.global.JaegerTracing }}
             - name: TRACER_ENABLED
               value: "true"

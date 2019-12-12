@@ -2,8 +2,13 @@
 
 kubectl="kubectl -n ${NSM_NAMESPACE}"
 
+# Clean old traces files
+rm Traces/Latency/$1_NSE/$2_NS/*
+
 #  Ping all the things!
 EXIT_VAL=0
+
+
 for nsc in $(${kubectl} get pods -o=name | grep vpn-gateway-nsc | sed 's@.*/@@'); do
     echo "===== >>>>> PROCESSING ${nsc}  <<<<< ==========="
     for ip in $(${kubectl} exec "${nsc}" -- ip addr| grep inet | awk '{print $2}'); do
@@ -20,6 +25,8 @@ for nsc in $(${kubectl} get pods -o=name | grep vpn-gateway-nsc | sed 's@.*/@@')
             if ${kubectl} exec "${nsc}" -- ping -c 5 "${targetIp}" ; then
                 echo "NSC ${nsc} with IP ${ip} pinging ${endpointName} TargetIP: ${targetIp} successful"
                 PingSuccess="true"
+                LogvpnFileName="${nsc}.txt"
+                ${kubectl} exec "${nsc}" -- ping -c 5 "${targetIp}" > Traces/Latency/$1_NSE/$2_NS/${LogvpnFileName} 
             else
                 echo "NSC ${nsc} with IP ${ip} pinging ${endpointName} TargetIP: ${targetIp} unsuccessful"
                 EXIT_VAL=1

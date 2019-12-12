@@ -10,6 +10,7 @@ pullPolicy: IfNotPresent
 
 forwardingPlane: vpp
 insecure: false
+selector: RoundRobin
 
 vpp:
   image: vppagent-forwarder

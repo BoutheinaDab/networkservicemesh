@@ -21,6 +21,8 @@ func NewRoundRobinSelector() Selector {
 }
 
 func (rr *roundRobinSelector) SelectEndpoint(requestConnection *connection.Connection, ns *registry.NetworkService, networkServiceEndpoints []*registry.NetworkServiceEndpoint) *registry.NetworkServiceEndpoint {
+        
+        logrus.Infof("start RoundRobin for ns.name %s and requestConnection.getid %s ", ns.GetName(), requestConnection.GetId())
 	if rr == nil {
 		return nil
 	}
@@ -31,10 +33,10 @@ func (rr *roundRobinSelector) SelectEndpoint(requestConnection *connection.Conne
 	defer rr.Unlock()
 	idx := rr.roundRobin[ns.GetName()] % len(networkServiceEndpoints)
 	endpoint := networkServiceEndpoints[idx]
+        logrus.Infof("RoundRobin selected %v idx %d ", endpoint, idx)
 	if endpoint == nil {
 		return nil
 	}
 	rr.roundRobin[ns.GetName()] = rr.roundRobin[ns.GetName()] + 1
-	logrus.Infof("RoundRobin selected %v", endpoint)
 	return endpoint
 }
